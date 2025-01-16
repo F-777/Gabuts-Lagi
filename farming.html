@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FUFUFAFA Menanam</title>
+    <link rel="shortcut icon" type="image" href="212.jpg">
+    <style>
+        body {
+            font-family: DM-Sans, sans-serif;
+            font-size: medium;
+            font-weight: 500;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #ff0c0c;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #e2ff26;
+        }
+        .container a {
+            color: #ccff00;
+        }
+        h1 {
+            text-align: center;
+            color: #ccff00;
+        }
+        .crops {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .crop {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #fffb08;
+            border-radius: 8px;
+            background: #f91c1c;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .crop:hover {
+            transform: scale(1.1);
+            background: #141414;
+            color: rgb(5, 200, 5);
+            border: 3px solid rgb(5, 200, 5);
+        }
+        .status {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 0;
+            height: 20px;
+            background: #ffe608;
+            border-radius: 5px;
+            transition: width 0.2s;
+        }
+        .progress-container {
+            width: 100%;
+            background: #7e7e7e;
+            border-radius: 5px;
+            margin-top: 10px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><a href="./mebel.html">FUFUFAFA FARM</a></h1>
+        <div class="crops">
+            <div class="crop" onclick="plantCrop('Padi')">🌾 Padi</div>
+            <div class="crop" onclick="plantCrop('Jagung')">🌽 Jagung</div>
+            <div class="crop" onclick="plantCrop('Wortel')">🥕 Wortel</div>
+            <div class="crop" onclick="plantCrop('Sawit')">🌴 Sawit</div>
+            <div class="crop" onclick="plantCrop('Makan Gratis')">🍱 Makan Gratis</div>
+        </div>
+        <div class="status" id="status">Pilih tanaman untuk ditanam!</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="debt-notif" id="debtNotif" style="text-align: center; margin-top: 20px; color: rgb(238, 255, 0); font-style: italic; font-weight: 500;"></div>
+    </div>
+    <script>
+        // Waktu tumbuh tanaman dalam milidetik
+        const growTimes = { "Padi": 5000, "Jagung": 3000, "Wortel": 4000, "Sawit": 7000, "Makan Gratis": 10};
+
+        // Variabel hutang (bisa diatur sesuai kebutuhan)
+        let debt = 100; // Jumlah hutang awal
+        const debtNotif = document.getElementById("debtNotif");
+        let statusDiv = document.getElementById("status");
+        let progressBar = document.getElementById("progressBar");
+
+        // Fungsi untuk menanam tanaman
+        function plantCrop(crop) {
+            if (!growTimes[crop]) {
+                statusDiv.innerText = `${crop} tidak tersedia!`;
+                return;
+            }
+
+            const growTime = growTimes[crop];
+            statusDiv.innerText = `${crop} sedang tumbuh...`;
+            progressBar.style.width = "0%";
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 100 / (growTime / 100); // Hitung progres dalam persen
+                progressBar.style.width = `${progress}%`;
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    statusDiv.innerText = `${crop} siap dipanen!`;
+                    progressBar.style.width = "100%";
+                    payDebt(crop); // Panggil fungsi bayar hutang setelah tanaman siap dipanen
+                }
+            }, 100);
+        }
+
+        // Fungsi untuk mengurangi hutang
+        function payDebt(crop) {
+            let payment = 10;
+
+            // Nilai pembayaran berdasarkan jenis tanaman
+            if (crop === "Padi") payment = 30;
+            if (crop === "Jagung") payment = 20;
+            if (crop === "Wortel") payment = 25;
+            if (crop === "Sawit") payment = 50;
+            if (crop === "Makan Gratis") payment = 80;
+
+            debt -= payment; // Kurangi hutang
+            debtNotif.innerText = `Loe Orang bayar Rp${payment}. Loe Orang Hutang: Rp${debt} Segera Bayar Ooo`;
+
+            // Jika hutang lunas
+            if (debt <= 0) {
+                debt = 0; // Pastikan hutang tidak negatif
+                debtNotif.innerText = "Loe Orang Lunas Hoetank";
+                statusDiv.innerText = "Anda bebas hutang, nikmati hasil panen!";
+            }
+        }
+    </script>
+    
+</body>
+</html>
